@@ -1,0 +1,207 @@
+﻿<UserControl x:Class="CaseManagerApp.MVVM.Views.CasesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CaseManagerApp.MVVM.Views" xmlns:viewmodels="clr-namespace:CaseManagerApp.MVVM.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:CasesViewModel}"
+             xmlns:models="clr-namespace:CaseManagerApp.MVVM.Models"
+             mc:Ignorable="d" 
+             Background="Gray"
+             d:DesignHeight="600" d:DesignWidth="900">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/DictionaryStyles.xaml">
+
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="20">
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+            <TextBlock Text="{Binding Title}"
+                       FontSize="20"
+                   Grid.Row="0"
+                       Padding="5"
+                       Margin="10 0 0 10"/>
+
+        <!--  CASE LIST -->
+        <ListView Grid.Row="1"
+                  Grid.Column="0"
+                  BorderThickness="0"
+                  Background="Green"
+                  ItemsSource="{Binding CaseList}"
+                  SelectedItem="{Binding SelectedCase}">
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type models:CaseModel}">
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="230"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{Binding Description}"
+                                    FontWeight="Bold"
+                                    FontSize="14" />
+                            <TextBlock Text="{Binding Created}"
+                                    FontStyle="Italic" 
+                                    FontSize="11"/>
+
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!-- CASE DETAILS -->
+        <Grid Grid.Column="1"
+              Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel  Grid.Column="0"
+                         Width="300"
+                         Margin="10 0">
+                <TextBlock Text="Ärendenummer:" Style="{StaticResource titleForm}"/>
+                <TextBlock Text="{Binding SelectedCase.CaseId}"/>
+                <TextBlock Text="Förnamn:" Style="{StaticResource titleForm}"/>
+                <TextBlock Text="{Binding SelectedCase.FirstName}"/>
+                <TextBlock Text="Efternamn:" Style="{StaticResource titleForm}"/>
+                <TextBlock Text="{Binding SelectedCase.LastName}"/>
+                <TextBlock Text="Epostadress:" Style="{StaticResource titleForm}"/>
+                <TextBlock Text="{Binding SelectedCase.Email}"/>
+                <TextBlock Text="Telefonnummer:" Style="{StaticResource titleForm}"/>
+                <TextBlock Text="{Binding SelectedCase.PhoneNumber}"/>
+                <TextBlock Text="Gata:" Style="{StaticResource titleForm}"/>
+                <TextBlock Text="{Binding SelectedCase.StreetName}"/>
+                <TextBlock Text="Ärendebeskrivning:" Style="{StaticResource titleForm}"/>
+                <TextBlock Text="{Binding SelectedCase.Description}"
+                          />
+            </StackPanel>
+            <StackPanel Grid.Column="0"
+                        Grid.Row="1"
+                Margin="10 40">
+                <TextBlock Text="Status:" Style="{StaticResource titleForm}"/>
+                <TextBlock Text="{Binding SelectedCase.Status}"
+                               Style="{StaticResource titleForm}"
+                            HorizontalAlignment="Left"
+                            Margin="0 5"/>
+                <StackPanel Orientation="Horizontal" Margin="1">
+                    <Button Content="Påbörja" Command="{Binding StatusToStartedCommand}"
+                            Style="{StaticResource menuBtns}"
+                            Width="70"
+                            Padding="10 5"
+                                Margin="0 2 2 5"
+                                HorizontalAlignment="Stretch"
+                                >
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button Content="Avsluta" Command="{Binding StatusToFinishedCommand}"
+                            Style="{StaticResource menuBtns}"
+                            Width="70"
+                            Padding="10 5"
+                                Margin="0 2 2 5"
+                                HorizontalAlignment="Stretch">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+
+            </StackPanel>
+            <!-- COMMENTS LIST -->
+            <StackPanel Grid.Column="1"
+                        Grid.RowSpan="2">
+                <TextBlock
+                        Text="Kommentarer:"
+                        Margin="0"
+                    Style="{StaticResource titleForm}"/>
+                <ListView Grid.Row="1" ItemsSource="{Binding SelectedCase.Comments}"
+                          
+                          Grid.Column="1"
+                          Width="200"
+                          Height="100"
+                          Padding="5">
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:CaseCommentEntity}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    
+                                    <TextBlock Text="{Binding Text}"
+                                               FontWeight="DemiBold"
+                                               FontSize="11"/>
+                                    
+                                    <TextBlock Text="{Binding Posted}"
+                                               FontStyle="Italic"
+                                               FontSize="10"
+                                               HorizontalAlignment="Left"/>
+                                    
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+            <!-- NEW COMMENT  -->
+                <TextBox
+                        Text="{Binding Comment}"
+                        Width="200"
+                        Height="120"
+                        Margin="0 10"
+                        Padding="5"
+                        HorizontalAlignment="Left"
+                        TextWrapping="Wrap"
+                        AcceptsReturn="True"
+                        VerticalScrollBarVisibility="Visible"
+                    />
+                <Button Content="Posta kommentar" 
+                        Command="{Binding AddCommentCommand}"
+                        Style="{StaticResource menuBtns}"
+                        HorizontalAlignment="Right"
+                        Margin="0 10">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                
+            </StackPanel>
+
+
+
+        </Grid>
+
+
+
+        
+    </Grid>
+</UserControl>
